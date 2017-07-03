@@ -5,5 +5,7 @@ module.exports = {
   canvasHeight: 0,
   canvasWidth: 0,
   gridHeight: 0,
-  gridArray: []
+  rowArray: [],
+  minRowSpeed: 1,
+  maxRowSpeed: 6
 }
