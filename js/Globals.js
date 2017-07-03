@@ -7,5 +7,11 @@ module.exports = {
   gridHeight: 0,
   rowArray: [],
   minRowSpeed: 1,
-  maxRowSpeed: 6
+  maxRowSpeed: 2,
+  minItems: 2,
+  maxItems: 5,
+  minItemWidth: 0,
+  maxItemWidth: 0,
+  minItemSpacing: 15,
+  maxItemSpacing: 50
 }

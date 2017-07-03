@@ -10,5 +10,6 @@ export function Row(xpos, ypos, w, h, direction, speed) {
     row.direction = 1
   }
   row.speed = speed
+  row.items = []
   return row
 }
