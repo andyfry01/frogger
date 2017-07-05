@@ -1,5 +1,6 @@
 import { Row } from './Row'
 import { Car } from './Car'
+import { Frog } from './Frog'
 import G from './Globals'
 
 let lastRender = 0
@@ -23,6 +24,7 @@ function draw() {
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
   Paint.Rows(ctx)
   Paint.Cars(ctx)
+  Paint.Frog(ctx)
 
 }
 
@@ -59,6 +61,10 @@ const Paint = {
         }
       }
     }
+  },
+  Frog: function(ctx) {
+    ctx.fillStyle = 'rgba(0, 255, 255, 0.8)'
+    ctx.fillRect(G.Frog.xpos, G.Frog.ypos, G.Frog.w, G.Frog.h)
   }
 }
 const Generate = {
@@ -73,12 +79,15 @@ const Generate = {
     canvas.height = G.canvasHeight
     G.minItemWidth = G.canvasWidth / 3
     G.maxItemWidth = G.canvasWidth / 4
+    G.gridHeight = G.canvasHeight / G.numGridRows
 
     let gridRowY = 0
     for (let i = 0; i < G.numGridRows; i++) {
       let direction = Math.floor(Math.random() * 100 + 1)
+      console.log(direction);
+      console.log(direction);
       let speed = Math.floor(Math.random() * (G.maxRowSpeed - G.minRowSpeed) + G.minRowSpeed)
-      let row = new Row(0, gridRowY, G.canvasWidth, G.canvasHeight/G.numGridRows, direction, speed)
+      let row = new Row(0, gridRowY, G.canvasWidth, G.gridHeight, direction, speed)
       let numItems = Math.floor(Math.random() * (G.maxItems - G.minItems) + G.minItems)
 
       let startingXPos = Math.floor(Math.random() * (G.canvasWidth - 0) + 0)
@@ -99,12 +108,18 @@ const Generate = {
     if (itemType = 'car') {
       return new Car(dimensions.xpos, dimensions.ypos, dimensions.w, dimensions.h, direction, speed)
     }
+  },
+  Frog: function() {
+    let player = new Frog(G.canvasWidth - 25, G.canvasHeight + 50, G.gridHeight, G.gridHeight)
+    G.Frog = player
   }
 }
 
 window.onload = function(){
   // Run game loop
   Generate.Rows()
+  Generate.Frog()
+  console.log(G);
   window.requestAnimationFrame(loop)
 }
 
