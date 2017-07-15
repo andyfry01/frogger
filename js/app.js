@@ -2,6 +2,7 @@ import { Row } from './Row'
 import { Car } from './Car'
 import { Frog } from './Frog'
 import G from './Globals'
+import Keys from './Keys'
 
 let lastRender = 0
 
@@ -12,6 +13,11 @@ function update(progress) {
       return item
     })
   }
+  if (Keys.isDown(Keys.UP)) { G.Frog.move('UP') }
+  if (Keys.isDown(Keys.RIGHT)) { G.Frog.move('RIGHT') }
+  if (Keys.isDown(Keys.DOWN)) { G.Frog.move('DOWN') }
+  if (Keys.isDown(Keys.LEFT)) { G.Frog.move('LEFT') }
+
 }
 
 function draw() {
@@ -29,9 +35,11 @@ function draw() {
 
 function loop(timestamp) {
   const progress = timestamp - lastRender
-  update(progress)
-  draw()
-  lastRender = timestamp
+  if (progress > 10) {
+    update(progress)
+    draw()
+    lastRender = timestamp
+  }
   window.requestAnimationFrame(loop)
 }
 
@@ -69,7 +77,7 @@ const Paint = {
   },
   Frog: function(ctx) {
     ctx.fillStyle = 'rgba(0, 255, 255, 0.8)'
-    ctx.fillRect(G.Frog.xpos, G.Frog.ypos, G.Frog.w, G.Frog.h)
+    ctx.fillRect(G.Frog.xPos, G.Frog.yPos, G.Frog.w, G.Frog.h)
   }
 }
 const Generate = {
@@ -96,9 +104,7 @@ const Generate = {
       for (let j = 0; j < numItems -1; j++) {
         if (i !== 0 && i !== 5 && i !== 9) {
           let itemWidth = Math.floor(Math.random() * (G.maxItemWidth - G.minItemWidth) + G.minItemWidth)
-          console.log(`itemWidth: ${itemWidth}`);
-          let itemSpacing = Math.floor(Math.random() * 100 + 50) + G.maxItemWidth 
-          console.log(`itemSpacing: ${itemSpacing}`);
+          let itemSpacing = Math.floor(Math.random() * 100 + 50) + G.maxItemWidth
           let carName = j + 1
           let item = this.Item('car', {xpos: startingXPos, ypos: row.ypos, w: itemWidth, h: row.h}, row.direction, row.speed, carName)
           row.items.push(item)
@@ -116,15 +122,19 @@ const Generate = {
     }
   },
   Frog: function() {
-    let player = new Frog(G.canvasWidth - 25, G.canvasHeight + 50, G.gridHeight, G.gridHeight)
+    let player = new Frog(G.canvasWidth / 2, G.canvasHeight - G.gridHeight, G.gridHeight, G.gridHeight)
     G.Frog = player
   }
 }
 
 window.onload = function(){
-  // Run game loop
+  // key bindings
+  window.addEventListener('keyup', (e) => { Keys.onKeyUp(e), false})
+  window.addEventListener('keydown', (e) => { Keys.onKeyDown(e), false})
+  // generate rows and frog
   Generate.Rows()
   Generate.Frog()
+  // Run game loop
   window.requestAnimationFrame(loop)
 }
 
