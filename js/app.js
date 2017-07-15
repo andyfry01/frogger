@@ -7,11 +7,10 @@ let lastRender = 0
 
 function update(progress) {
   for (let row in G.rowArray) {
-    for (let item in G.rowArray[row].items) {
-      let car = G.rowArray[row].items[item]
-      car.xpos += car.speed * car.direction
-      G.rowArray[row].items.splice(G.rowArray[row].items[item], 1, car)
-    }
+    G.rowArray[row].items = G.rowArray[row].items.map(item => {
+      item.xpos += item.speed * item.direction
+      return item
+    })
   }
 }
 
@@ -53,11 +52,17 @@ const Paint = {
         if (car.xpos > ctx.canvas.width + car.w) {
           car.xpos = 0 - car.w
           ctx.fillRect(0 - car.w, car.ypos, car.w, car.h)
+          ctx.fillText(`car: ${car.name}`, car.xpos, car.ypos)
+
         } else if (car.xpos < 0 - car.w) {
           car.xpos = ctx.canvas.width - 20
           ctx.fillRect(ctx.canvas.width + car.w, car.ypos, car.w, car.h)
+          ctx.fillText(`car: ${car.name}`, car.xpos, car.ypos)
+
         } else {
           ctx.fillRect(car.xpos, car.ypos, car.w, car.h)
+          ctx.fillText(`car: ${car.name}`, car.xpos, car.ypos)
+
         }
       }
     }
@@ -84,29 +89,30 @@ const Generate = {
     let gridRowY = 0
     for (let i = 0; i < G.numGridRows; i++) {
       let direction = Math.floor(Math.random() * 100 + 1)
-      console.log(direction);
-      console.log(direction);
       let speed = Math.floor(Math.random() * (G.maxRowSpeed - G.minRowSpeed) + G.minRowSpeed)
-      let row = new Row(0, gridRowY, G.canvasWidth, G.gridHeight, direction, speed)
+      let row = new Row(0, gridRowY, G.canvasWidth, G.gridHeight, direction, 4)
       let numItems = Math.floor(Math.random() * (G.maxItems - G.minItems) + G.minItems)
-
       let startingXPos = Math.floor(Math.random() * (G.canvasWidth - 0) + 0)
-      for (let j = 0; j < numItems; j++) {
+      for (let j = 0; j < numItems -1; j++) {
         if (i !== 0 && i !== 5 && i !== 9) {
           let itemWidth = Math.floor(Math.random() * (G.maxItemWidth - G.minItemWidth) + G.minItemWidth)
-          let itemSpacing = Math.floor(Math.random() * (G.maxItemSpacing - G.minItemSpacing) + G.minItemSpacing)
-          let item = this.Item('car', {xpos: startingXPos, ypos: row.ypos, w: itemWidth, h: row.h}, row.direction, row.speed)
+          console.log(`itemWidth: ${itemWidth}`);
+          let itemSpacing = Math.floor(Math.random() * 100 + 50) + G.maxItemWidth 
+          console.log(`itemSpacing: ${itemSpacing}`);
+          let carName = j + 1
+          let item = this.Item('car', {xpos: startingXPos, ypos: row.ypos, w: itemWidth, h: row.h}, row.direction, row.speed, carName)
           row.items.push(item)
-          startingXPos += itemSpacing + itemWidth
+          startingXPos += (itemWidth + itemSpacing)
         }
       }
       G.rowArray.push(row)
+      console.log(row);
       gridRowY += G.rowArray[i].h
     }
   },
-  Item: function(itemType, dimensions, direction, speed) {
+  Item: function(itemType, dimensions, direction, speed, name) {
     if (itemType = 'car') {
-      return new Car(dimensions.xpos, dimensions.ypos, dimensions.w, dimensions.h, direction, speed)
+      return new Car(dimensions.xpos, dimensions.ypos, dimensions.w, dimensions.h, direction, speed, name)
     }
   },
   Frog: function() {
@@ -119,7 +125,6 @@ window.onload = function(){
   // Run game loop
   Generate.Rows()
   Generate.Frog()
-  console.log(G);
   window.requestAnimationFrame(loop)
 }
 
