@@ -5,18 +5,24 @@ import G from './Globals'
 import Keys from './Keys'
 
 let lastRender = 0
+let debounce = 0
 
 function update(progress) {
+  debounce += progress
   for (let row in G.rowArray) {
     G.rowArray[row].items = G.rowArray[row].items.map(item => {
       item.xpos += item.speed * item.direction
       return item
     })
   }
-  if (Keys.isDown(Keys.UP)) { G.Frog.move('UP') }
-  if (Keys.isDown(Keys.RIGHT)) { G.Frog.move('RIGHT') }
-  if (Keys.isDown(Keys.DOWN)) { G.Frog.move('DOWN') }
-  if (Keys.isDown(Keys.LEFT)) { G.Frog.move('LEFT') }
+  // debounces key presses so frog doesn't go flying across screen
+  if (debounce > 70) {
+    if (Keys.isDown(Keys.UP)) { G.Frog.move('UP') }
+    if (Keys.isDown(Keys.RIGHT)) { G.Frog.move('RIGHT') }
+    if (Keys.isDown(Keys.DOWN)) { G.Frog.move('DOWN') }
+    if (Keys.isDown(Keys.LEFT)) { G.Frog.move('LEFT') }
+    debounce = 0
+  }
 
 }
 
@@ -35,11 +41,9 @@ function draw() {
 
 function loop(timestamp) {
   const progress = timestamp - lastRender
-  if (progress > 10) {
-    update(progress)
-    draw()
-    lastRender = timestamp
-  }
+  update(progress)
+  draw()
+  lastRender = timestamp
   window.requestAnimationFrame(loop)
 }
 
