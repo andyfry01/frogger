@@ -4,6 +4,7 @@ import { Frog } from './Frog'
 import G from './Globals'
 import Keys from './Keys'
 
+// set global timing variables
 let lastRender = 0
 let debounce = 0
 
@@ -11,7 +12,8 @@ function update(progress) {
   debounce += progress
   for (let row in G.rowArray) {
     G.rowArray[row].items = G.rowArray[row].items.map(item => {
-      item.xpos += item.speed * item.direction
+      item.update()
+      item.detectFrog(G.Frog)
       return item
     })
   }
