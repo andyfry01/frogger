@@ -53,7 +53,7 @@ const Paint = {
     for (let i = 0; i < G.rowArray.length; i++) {
       let row = G.rowArray[i]
       ctx.fillStyle = 'rgba(50, 180, 50, 0.8)'
-      ctx.fillRect(row.xpos, row.ypos, row.w, row.h)
+      ctx.fillRect(row.xPos, row.yPos, row.w, row.h)
     }
   },
   Cars: function(ctx) {
@@ -61,19 +61,19 @@ const Paint = {
       for (let item in G.rowArray[i].items) {
         let car = G.rowArray[i].items[item]
         ctx.fillStyle = 'rgba(255, 255, 255, 0.8)'
-        if (car.xpos > ctx.canvas.width + car.w) {
-          car.xpos = 0 - car.w
-          ctx.fillRect(0 - car.w, car.ypos, car.w, car.h)
-          ctx.fillText(`car: ${car.name}`, car.xpos, car.ypos)
+        if (car.xPos > ctx.canvas.width + car.w) {
+          car.xPos = 0 - car.w
+          ctx.fillRect(0 - car.w, car.yPos, car.w, car.h)
+          ctx.fillText(`car: ${car.name}`, car.xPos, car.yPos)
 
-        } else if (car.xpos < 0 - car.w) {
-          car.xpos = ctx.canvas.width - 20
-          ctx.fillRect(ctx.canvas.width + car.w, car.ypos, car.w, car.h)
-          ctx.fillText(`car: ${car.name}`, car.xpos, car.ypos)
+        } else if (car.xPos < 0 - car.w) {
+          car.xPos = ctx.canvas.width - 20
+          ctx.fillRect(ctx.canvas.width + car.w, car.yPos, car.w, car.h)
+          ctx.fillText(`car: ${car.name}`, car.xPos, car.yPos)
 
         } else {
-          ctx.fillRect(car.xpos, car.ypos, car.w, car.h)
-          ctx.fillText(`car: ${car.name}`, car.xpos, car.ypos)
+          ctx.fillRect(car.xPos, car.yPos, car.w, car.h)
+          ctx.fillText(`car: ${car.name}`, car.xPos, car.yPos)
 
         }
       }
@@ -104,15 +104,15 @@ const Generate = {
       let speed = Math.floor(Math.random() * (G.maxRowSpeed - G.minRowSpeed) + G.minRowSpeed)
       let row = new Row(0, gridRowY, G.canvasWidth, G.gridHeight, direction, 4)
       let numItems = Math.floor(Math.random() * (G.maxItems - G.minItems) + G.minItems)
-      let startingXPos = Math.floor(Math.random() * (G.canvasWidth - 0) + 0)
+      let startingxPos = Math.floor(Math.random() * (G.canvasWidth - 0) + 0)
       for (let j = 0; j < numItems -1; j++) {
         if (i !== 0 && i !== 5 && i !== 9) {
           let itemWidth = Math.floor(Math.random() * (G.maxItemWidth - G.minItemWidth) + G.minItemWidth)
           let itemSpacing = Math.floor(Math.random() * 100 + 50) + G.maxItemWidth
-          let carName = j + 1
-          let item = this.Item('car', {xpos: startingXPos, ypos: row.ypos, w: itemWidth, h: row.h}, row.direction, row.speed, carName)
+          let carName = `car ${j+1} in row ${gridRowY}`
+          let item = this.Item('car', {xPos: startingxPos, yPos: row.yPos, w: itemWidth, h: row.h}, row.direction, row.speed, carName)
           row.items.push(item)
-          startingXPos += (itemWidth + itemSpacing)
+          startingxPos += (itemWidth + itemSpacing)
         }
       }
       G.rowArray.push(row)
@@ -122,7 +122,7 @@ const Generate = {
   },
   Item: function(itemType, dimensions, direction, speed, name) {
     if (itemType = 'car') {
-      return new Car(dimensions.xpos, dimensions.ypos, dimensions.w, dimensions.h, direction, speed, name)
+      return new Car(dimensions.xPos, dimensions.yPos, dimensions.w, dimensions.h, direction, speed, name)
     }
   },
   Frog: function() {

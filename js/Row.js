@@ -1,9 +1,9 @@
 import { Rectangle } from './Rectangle'
 
-export function Row(xpos, ypos, w, h, direction, speed) {
+export function Row(xPos, yPos, w, h, direction, speed) {
   let row = new Rectangle(w, h)
-  row.xpos = xpos
-  row.ypos = ypos
+  row.xPos = xPos
+  row.yPos = yPos
   if (direction <= 50) {
     row.direction = -1
   } else {
