@@ -13,16 +13,18 @@ function update(progress) {
   for (let row in G.rowArray) {
     G.rowArray[row].items = G.rowArray[row].items.map(item => {
       item.update()
-      item.detectFrog(G.Frog)
+      if (item.hitsFrog(G.Frog)) {
+        G.Frog.update(item.direction, item.speed)
+      }
       return item
     })
   }
   // debounces key presses so frog doesn't go flying across screen
   if (debounce > 70) {
-    if (Keys.isDown(Keys.UP)) { G.Frog.move('UP') }
-    if (Keys.isDown(Keys.RIGHT)) { G.Frog.move('RIGHT') }
-    if (Keys.isDown(Keys.DOWN)) { G.Frog.move('DOWN') }
-    if (Keys.isDown(Keys.LEFT)) { G.Frog.move('LEFT') }
+    if (Keys.isDown(Keys.UP)) { G.Frog.update('UP') }
+    if (Keys.isDown(Keys.RIGHT)) { G.Frog.update('RIGHT') }
+    if (Keys.isDown(Keys.DOWN)) { G.Frog.update('DOWN') }
+    if (Keys.isDown(Keys.LEFT)) { G.Frog.update('LEFT') }
     debounce = 0
   }
 

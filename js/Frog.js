@@ -32,5 +32,19 @@ export function Frog(xPos, yPos, w, h) {
       frog.leftEdge = frog.xPos
     }
   }
+
+  // update method, for moving frog on key input and when it encounters a car or log
+  frog.update = function(direction, speed){
+    // if direction isn't an integer and if no speed is given, it is user input
+    if (!parseInt(direction) && speed === undefined) {
+      frog.move(direction)
+    // if direction IS an integer and there is a speed given, the frog is sitting on a log
+    // and should move with the log
+    } else {
+      frog.xPos += speed * direction
+      frog.rightEdge = frog.xPos + frog.w
+      frog.leftEdge = frog.xPos
+    }
+  }
   return frog
 }

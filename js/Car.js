@@ -24,12 +24,12 @@ export function Car(xPos, yPos, w, h, direction, speed, name) {
     car.leftEdge = car.xPos
   }
 
-  // collision detecting
-  car.detectFrog = function(frog){
-    if (frog.topEdge == car.topEdge) {
+  // collision detecting, returns true if frog comes into contact
+  car.hitsFrog = function(frog){
+    if (frog.topEdge === car.topEdge) {
       if (frog.rightEdge > car.leftEdge) {
         if (frog.leftEdge < car.rightEdge) {
-          console.log(`hi ${car.name}`);
+          return true
         }
       }
     }
