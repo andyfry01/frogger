@@ -3,6 +3,7 @@ import { Car } from './Car'
 import { Frog } from './Frog'
 import G from './Globals'
 import Keys from './Keys'
+import Random from './Random'
 
 // set global timing variables
 let lastRender = 0
@@ -40,7 +41,6 @@ function draw() {
   Paint.Rows(ctx)
   Paint.Cars(ctx)
   Paint.Frog(ctx)
-
 }
 
 function loop(timestamp) {
@@ -54,34 +54,29 @@ function loop(timestamp) {
 // Methods for painting elements to the canvas
 const Paint = {
   Rows: function(ctx) {
-    for (let i = 0; i < G.rowArray.length; i++) {
-      let row = G.rowArray[i]
+    G.rowArray.map(row => {
       ctx.fillStyle = 'rgba(50, 180, 50, 0.8)'
       ctx.fillRect(row.xPos, row.yPos, row.w, row.h)
-    }
+    })
   },
   Cars: function(ctx) {
-    for (let i = 0; i < G.rowArray.length; i++) {
-      for (let item in G.rowArray[i].items) {
-        let car = G.rowArray[i].items[item]
+    G.rowArray.map(row => {
+      row.items.map(car => {
         ctx.fillStyle = 'rgba(255, 255, 255, 0.8)'
         if (car.xPos > ctx.canvas.width + car.w) {
           car.xPos = 0 - car.w
           ctx.fillRect(0 - car.w, car.yPos, car.w, car.h)
           ctx.fillText(`car: ${car.name}`, car.xPos, car.yPos)
-
         } else if (car.xPos < 0 - car.w) {
           car.xPos = ctx.canvas.width - 20
           ctx.fillRect(ctx.canvas.width + car.w, car.yPos, car.w, car.h)
           ctx.fillText(`car: ${car.name}`, car.xPos, car.yPos)
-
         } else {
           ctx.fillRect(car.xPos, car.yPos, car.w, car.h)
           ctx.fillText(`car: ${car.name}`, car.xPos, car.yPos)
-
         }
-      }
-    }
+      })
+    })
   },
   Frog: function(ctx) {
     ctx.fillStyle = 'rgba(0, 255, 255, 0.8)'
@@ -104,15 +99,20 @@ const Generate = {
 
     let gridRowY = 0
     for (let i = 0; i < G.numGridRows; i++) {
-      let direction = Math.floor(Math.random() * 100 + 1)
-      let speed = Math.floor(Math.random() * (G.maxRowSpeed - G.minRowSpeed) + G.minRowSpeed)
+
+
+      let direction = Random.direction()
+      let speed = Random.speed(G.maxRowSpeed, G.minRowSpeed)
+      let numItems = Random.itemCount(G.maxItems, G.minItems)
+      let startingxPos = Random.startingXPos(G.canvasWidth)
+
       let row = new Row(0, gridRowY, G.canvasWidth, G.gridHeight, direction, 4)
-      let numItems = Math.floor(Math.random() * (G.maxItems - G.minItems) + G.minItems)
-      let startingxPos = Math.floor(Math.random() * (G.canvasWidth - 0) + 0)
+
       for (let j = 0; j < numItems -1; j++) {
+        // no cars or logs on top, middle or bottom row
         if (i !== 0 && i !== 5 && i !== 9) {
-          let itemWidth = Math.floor(Math.random() * (G.maxItemWidth - G.minItemWidth) + G.minItemWidth)
-          let itemSpacing = Math.floor(Math.random() * 100 + 50) + G.maxItemWidth
+          let itemWidth = Random.itemWidth(G.maxItemWidth, G.minItemWidth)
+          let itemSpacing = Random.itemSpacing(G.maxItemWidth)
           let carName = `car ${j+1} in row ${gridRowY}`
           let item = this.Item('car', {xPos: startingxPos, yPos: row.yPos, w: itemWidth, h: row.h}, row.direction, row.speed, carName)
           row.items.push(item)
