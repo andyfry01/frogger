@@ -7,10 +7,10 @@ import Random from './Random'
 
 // set global timing variables
 let lastRender = 0
-let debounce = 0
+let throttleInterval = 0
 
 function update(progress) {
-  debounce += progress
+  throttleInterval += progress
   for (let row in G.rowArray) {
     G.rowArray[row].items = G.rowArray[row].items.map(item => {
       item.update()
@@ -20,13 +20,13 @@ function update(progress) {
       return item
     })
   }
-  // debounces key presses so frog doesn't go flying across screen
-  if (debounce > 70) {
+  // throttles key presses so frog doesn't go flying across screen
+  if (throttleInterval > 70) {
     if (Keys.isDown(Keys.UP)) { G.Frog.update('UP') }
     if (Keys.isDown(Keys.RIGHT)) { G.Frog.update('RIGHT') }
     if (Keys.isDown(Keys.DOWN)) { G.Frog.update('DOWN') }
     if (Keys.isDown(Keys.LEFT)) { G.Frog.update('LEFT') }
-    debounce = 0
+    throttleInterval = 0
   }
 
 }
@@ -120,7 +120,6 @@ const Generate = {
         }
       }
       G.rowArray.push(row)
-      console.log(row);
       gridRowY += G.rowArray[i].h
     }
   },
