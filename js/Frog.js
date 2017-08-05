@@ -16,20 +16,23 @@ export function Frog(xPos, yPos, w, h) {
   frog.move = function(direction){
     if (direction === 'UP') {
       frog.yPos -= frog.h
-      frog.topEdge = frog.yPos
+      frog.topEdge -= frog.h
+      frog.bottomEdge -= frog.h
     }
     if (direction === 'RIGHT') {
       frog.xPos += frog.w
-      frog.rightEdge = frog.xPos + frog.w
+      frog.rightEdge += frog.w
+      frog.leftEdge += frog.w
     }
     if (direction === 'DOWN') {
       frog.yPos += frog.h
-      frog.topEdge = frog.yPos
-      frog.bottomEdge = frog.yPos + frog.h
+      frog.topEdge += frog.h
+      frog.bottomEdge += frog.h
     }
     if (direction === 'LEFT') {
       frog.xPos -= frog.w
-      frog.leftEdge = frog.xPos
+      frog.leftEdge -= frog.w
+      frog.rightEdge -= frog.w
     }
   }
 
