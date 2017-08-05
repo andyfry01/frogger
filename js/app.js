@@ -1,5 +1,6 @@
 import { Row } from './Row'
 import { Car } from './Car'
+import { Log } from './Log'
 import { Frog } from './Frog'
 import G from './Globals'
 import Keys from './Keys'
