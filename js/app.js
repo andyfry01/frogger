@@ -16,7 +16,11 @@ function update(progress) {
     G.rowArray[row].items = G.rowArray[row].items.map(item => {
       item.update()
       if (item.hitsFrog(G.Frog)) {
-        G.Frog.update(item.direction, item.speed)
+        if (item.type === 'car') {
+          endGame('lose')
+        } else if (item.type === 'log') {
+          G.Frog.update(item.direction, item.speed)
+        }
       }
       return item
     })
@@ -29,7 +33,7 @@ function update(progress) {
     if (Keys.isDown(Keys.LEFT)) { G.Frog.update('LEFT') }
     throttleInterval = 0
   }
-
+  checkGameStatus(G.Frog)
 }
 
 function draw() {
@@ -50,6 +54,32 @@ function loop(timestamp) {
   draw()
   lastRender = timestamp
   window.requestAnimationFrame(loop)
+}
+
+function endGame(gameStatus){
+  if (gameStatus === 'win') {
+    incrementScore()
+  }
+  restartGame()
+}
+
+function incrementScore(){
+  console.log('incrementScore fired');
+}
+function restartGame(){
+  console.log('restartGame fired');
+}
+
+function checkGameStatus(frog){
+  // check if frog is off screen
+  if (frog.xPos > G.canvasWidth || frog.xPos < 0 - frog.w || frog.yPos > G.canvasHeight - frog.h) {
+    endGame('lose')
+  }
+  // check if frog has made it to the end of the level
+  if (frog.yPos === 0) {
+    console.log('frog wins?');
+    endGame('win')
+  }
 }
 
 // Methods for painting elements to the canvas
@@ -125,7 +155,7 @@ const Generate = {
   },
   Item: function(itemType, dimensions, direction, speed, name) {
     if (itemType = 'car') {
-      return new Car(dimensions.xPos, dimensions.yPos, dimensions.w, dimensions.h, direction, speed, name)
+      return new Car(dimensions.xPos, dimensions.yPos, dimensions.w, dimensions.h, direction, speed, name, 'car')
     }
   },
   Frog: function() {

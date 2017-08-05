@@ -39,7 +39,7 @@ export function Frog(xPos, yPos, w, h) {
   }
 
   // update method, for moving frog on key input and when it encounters a car or log
-  frog.update = function(direction, speed){
+  frog.update = function(direction, speed) {
     console.log('updating?');
     // if direction isn't an integer and if no speed is given, it is user input
     if (!parseInt(direction) && speed === undefined) {

@@ -1,11 +1,12 @@
 import { Rectangle } from './Rectangle'
 
-export function Car(xPos, yPos, w, h, direction, speed, name) {
+export function Car(xPos, yPos, w, h, direction, speed, name, type) {
   // basics
   let car = new Rectangle(w, h)
   car.xPos = xPos
   car.yPos = yPos
   car.name = name
+  car.type = type
 
   // used for moving car on update
   car.direction = direction
@@ -25,7 +26,7 @@ export function Car(xPos, yPos, w, h, direction, speed, name) {
   }
 
   // collision detecting, returns true if frog comes into contact
-  car.hitsFrog = function(frog){
+  car.hitsFrog = function(frog) {
     if (frog.topEdge === car.topEdge) {
       if (frog.rightEdge > car.leftEdge) {
         if (frog.leftEdge < car.rightEdge) {
