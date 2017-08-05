@@ -100,8 +100,7 @@ const Generate = {
 
     let gridRowY = 0
     for (let i = 0; i < G.numGridRows; i++) {
-
-
+      gridRowY = Math.floor(gridRowY)
       let direction = Random.direction()
       let speed = Random.speed(G.maxRowSpeed, G.minRowSpeed)
       let numItems = Random.itemCount(G.maxItems, G.minItems)

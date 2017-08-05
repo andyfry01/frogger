@@ -3,8 +3,8 @@ import { Rectangle } from './Rectangle'
 export function Frog(xPos, yPos, w, h) {
   // basics
   let frog = new Rectangle(w, h)
-  frog.xPos = xPos
-  frog.yPos = yPos
+  frog.xPos = Math.floor(xPos)
+  frog.yPos = Math.floor(yPos)
 
   // used for collision detecting
   frog.topEdge = frog.yPos
@@ -14,33 +14,37 @@ export function Frog(xPos, yPos, w, h) {
 
   // moves the frog!
   frog.move = function(direction){
+    let frogW = Math.floor(frog.w)
+    let frogH = Math.floor(frog.h)
     if (direction === 'UP') {
-      frog.yPos -= frog.h
-      frog.topEdge -= frog.h
-      frog.bottomEdge -= frog.h
+      frog.yPos -= frogH
+      frog.topEdge -= frogH
+      frog.bottomEdge -= frogH
     }
     if (direction === 'RIGHT') {
-      frog.xPos += frog.w
-      frog.rightEdge += frog.w
-      frog.leftEdge += frog.w
+      frog.xPos += frogW
+      frog.rightEdge += frogW
+      frog.leftEdge += frogW
     }
     if (direction === 'DOWN') {
-      frog.yPos += frog.h
-      frog.topEdge += frog.h
-      frog.bottomEdge += frog.h
+      frog.yPos += frogH
+      frog.topEdge += frogH
+      frog.bottomEdge += frogH
     }
     if (direction === 'LEFT') {
-      frog.xPos -= frog.w
-      frog.leftEdge -= frog.w
-      frog.rightEdge -= frog.w
+      frog.xPos -= frogW
+      frog.leftEdge -= frogW
+      frog.rightEdge -= frogW
     }
   }
 
   // update method, for moving frog on key input and when it encounters a car or log
   frog.update = function(direction, speed){
+    console.log('updating?');
     // if direction isn't an integer and if no speed is given, it is user input
     if (!parseInt(direction) && speed === undefined) {
       frog.move(direction)
+      console.log(frog.topEdge);
     // if direction IS an integer and there is a speed given, the frog is sitting on a log
     // and should move with the log
     } else {
