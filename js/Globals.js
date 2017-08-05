@@ -15,6 +15,8 @@ module.exports = {
   maxItemSpacing: 50,
 
   rowArray: [],
-  Frog: undefined
+  Frog: undefined,
+
+  playerScore: 0,
 
 }

@@ -46,6 +46,7 @@ function draw() {
   Paint.Rows(ctx)
   Paint.Cars(ctx)
   Paint.Frog(ctx)
+  Paint.Score(ctx, G.playerScore)
 }
 
 function loop(timestamp) {
@@ -63,11 +64,16 @@ function endGame(gameStatus){
   restartGame()
 }
 
-function incrementScore(){
+function incrementScore() {
   console.log('incrementScore fired');
+  G.playerScore += 1
 }
+
 function restartGame(){
-  console.log('restartGame fired');
+  // kill the old frog
+  G.Frog = undefined
+  // put a new one in the starting position
+  Generate.Frog()
 }
 
 function checkGameStatus(frog){
@@ -112,7 +118,12 @@ const Paint = {
   Frog: function(ctx) {
     ctx.fillStyle = 'rgba(0, 255, 255, 0.8)'
     ctx.fillRect(G.Frog.xPos, G.Frog.yPos, G.Frog.w, G.Frog.h)
+  },
+  Score: function(ctx, score){
+    ctx.font = '24px Cambria';
+    ctx.fillText(`Score: ${score}`, 10, 25)
   }
+
 }
 const Generate = {
 
