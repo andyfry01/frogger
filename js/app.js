@@ -145,16 +145,20 @@ const Generate = {
       let direction = Random.direction()
       let speed = Random.speed(G.maxRowSpeed, G.minRowSpeed)
       let numItems = Random.itemCount(G.maxItems, G.minItems)
+      console.log(`random number of items for row ${gridRowY}: ${numItems}`);
       let startingxPos = Random.startingXPos(G.canvasWidth)
 
       let row = new Row(0, gridRowY, G.canvasWidth, G.gridHeight, direction, 4)
 
-      for (let j = 0; j < numItems -1; j++) {
         // no cars or logs on top, middle or bottom row
         if (i !== 0 && i !== 5 && i !== 9) {
-          let itemWidth = Random.itemWidth(G.maxItemWidth, G.minItemWidth)
+          for (let j = 0; j < numItems; j++) {
+          let maxWidthInUnits = G.maxItemWidth * G.gridHeight
+          let minWidthInUnits = G.minItemWidth * G.gridHeight
+          let itemWidth = Random.itemWidth(maxWidthInUnits, minWidthInUnits)
+          console.log(`item width is ${itemWidth}`);
           let itemSpacing = Random.itemSpacing(G.maxItemWidth)
-          let carName = `car ${j+1} in row ${gridRowY}`
+          let carName = `car ${j} in row ${gridRowY}`
           let item = this.Item('car', {xPos: startingxPos, yPos: row.yPos, w: itemWidth, h: row.h}, row.direction, row.speed, carName)
           row.items.push(item)
           startingxPos += (itemWidth + itemSpacing)

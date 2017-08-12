@@ -9,8 +9,8 @@ module.exports = {
   maxRowSpeed: 2,
   minItems: 2,
   maxItems: 5,
-  minItemWidth: 0,
-  maxItemWidth: 0,
+  minItemWidth: 1,
+  maxItemWidth: 3,
   minItemSpacing: 15,
   maxItemSpacing: 50,
 
