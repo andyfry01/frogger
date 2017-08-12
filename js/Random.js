@@ -16,6 +16,8 @@ module.exports = {
     return Math.floor(Math.random() * (canvasWidth - 0) + 0)
   },
   itemWidth: function(maxItemWidth, minItemWidth){
+    console.log(`maxItemWidth: ${maxItemWidth}`);
+    console.log(`minItemWidth: ${minItemWidth}`);
     // returns random item width for car/log
     return Math.floor(Math.random() * (maxItemWidth - minItemWidth) + minItemWidth)
   },

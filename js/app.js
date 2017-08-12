@@ -128,16 +128,6 @@ const Paint = {
 const Generate = {
 
   Rows: function() {
-    // Get canvas and window dimensions
-    const canvas = document.getElementsByClassName('canvas')[0]
-    G.canvasWidth = window.innerWidth - 16
-    G.canvasHeight = window.innerHeight - 16
-    G.rowArray = []
-    canvas.width = G.canvasWidth
-    canvas.height = G.canvasHeight
-    G.minItemWidth = G.canvasWidth / 3
-    G.maxItemWidth = G.canvasWidth / 4
-    G.gridHeight = G.canvasHeight / G.numGridRows
 
     let gridRowY = 0
     for (let i = 0; i < G.numGridRows; i++) {
@@ -145,7 +135,6 @@ const Generate = {
       let direction = Random.direction()
       let speed = Random.speed(G.maxRowSpeed, G.minRowSpeed)
       let numItems = Random.itemCount(G.maxItems, G.minItems)
-      console.log(`random number of items for row ${gridRowY}: ${numItems}`);
       let startingxPos = Random.startingXPos(G.canvasWidth)
 
       let row = new Row(0, gridRowY, G.canvasWidth, G.gridHeight, direction, 4)
@@ -156,7 +145,6 @@ const Generate = {
           let maxWidthInUnits = G.maxItemWidth * G.gridHeight
           let minWidthInUnits = G.minItemWidth * G.gridHeight
           let itemWidth = Random.itemWidth(maxWidthInUnits, minWidthInUnits)
-          console.log(`item width is ${itemWidth}`);
           let itemSpacing = Random.itemSpacing(G.maxItemWidth)
           let carName = `car ${j} in row ${gridRowY}`
           let item = this.Item('car', {xPos: startingxPos, yPos: row.yPos, w: itemWidth, h: row.h}, row.direction, row.speed, carName)
@@ -180,6 +168,16 @@ const Generate = {
 }
 
 window.onload = function(){
+  // Get canvas and window dimensions
+  const canvas = document.getElementsByClassName('canvas')[0]
+  // Initial setup for global variables
+  G.canvasWidth = window.innerWidth - 16
+  G.canvasHeight = window.innerHeight - 16
+  G.rowArray = []
+  canvas.width = G.canvasWidth
+  canvas.height = G.canvasHeight
+  G.gridHeight = G.canvasHeight / G.numGridRows
+
   // key bindings
   window.addEventListener('keyup', (e) => { Keys.onKeyUp(e), false})
   window.addEventListener('keydown', (e) => { Keys.onKeyDown(e), false})
