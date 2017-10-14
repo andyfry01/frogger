@@ -171,8 +171,9 @@ window.onload = function(){
   // Get canvas and window dimensions
   const canvas = document.getElementsByClassName('canvas')[0]
   // Initial setup for global variables
-  G.canvasWidth = window.innerWidth - 16
-  G.canvasHeight = window.innerHeight - 16
+  // canvas width and height being rounded down to nearest multiple of 10
+  G.canvasWidth = Math.floor((window.innerWidth - 16) / 10) * 10
+  G.canvasHeight = Math.floor((window.innerHeight - 16) / 10) * 10
   G.rowArray = []
   canvas.width = G.canvasWidth
   canvas.height = G.canvasHeight
