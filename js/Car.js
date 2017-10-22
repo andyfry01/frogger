@@ -1,12 +1,12 @@
 import { Rectangle } from './Rectangle'
+import G from './Globals'
 
-export function Car(xPos, yPos, w, h, direction, speed, name, type) {
+export function Car(xPos, yPos, w, h, direction, speed) {
   // basics
   let car = new Rectangle(w, h)
   car.xPos = xPos
   car.yPos = yPos
-  car.name = name
-  car.type = type
+  car.type = 'car'
 
   // used for moving car on update
   car.direction = direction
