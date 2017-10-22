@@ -11,8 +11,8 @@ module.exports = {
   maxItems: 5,
   minItemWidth: 1,
   maxItemWidth: 3,
-  minItemSpacing: 15,
-  maxItemSpacing: 50,
+  minItemSpacing: 3,
+  maxItemSpacing: 5,
 
   rowArray: [],
   Frog: undefined,
