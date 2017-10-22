@@ -91,27 +91,23 @@ function checkGameStatus(frog){
 // Methods for painting elements to the canvas
 const Paint = {
   Rows: function(ctx) {
-    G.rowArray.map(row => {
+    G.rowArray.forEach(row => {
       ctx.fillStyle = 'rgba(50, 180, 50, 0.8)'
       ctx.fillRect(row.xPos, row.yPos, row.w, row.h)
     })
   },
   Cars: function(ctx) {
-    G.rowArray.map(row => {
-      row.items.map(car => {
+    G.rowArray.forEach(row => {
+      row.items.forEach(car => {
         ctx.fillStyle = 'rgba(255, 255, 255, 0.8)'
-        if (car.xPos > ctx.canvas.width + car.w) {
-          car.xPos = 0 - car.w
-          ctx.fillRect(0 - car.w, car.yPos, car.w, car.h)
-          ctx.fillText(`car: ${car.name}`, car.xPos, car.yPos)
-        } else if (car.xPos < 0 - car.w) {
-          car.xPos = ctx.canvas.width - 20
-          ctx.fillRect(ctx.canvas.width + car.w, car.yPos, car.w, car.h)
-          ctx.fillText(`car: ${car.name}`, car.xPos, car.yPos)
-        } else {
-          ctx.fillRect(car.xPos, car.yPos, car.w, car.h)
-          ctx.fillText(`car: ${car.name}`, car.xPos, car.yPos)
+        if (car.xPos > ctx.canvas.width + (G.maxItemWidth * G.gridHeight)) {
+          car.xPos = 0 - (G.maxItemWidth * G.gridHeight)
         }
+        if (car.xPos < 0 - (G.maxItemWidth * G.gridHeight)) {
+          car.xPos = ctx.canvas.width + (G.maxItemWidth * G.gridHeight)
+        }
+        ctx.fillRect(car.xPos, car.yPos, car.w, car.h)
+        ctx.fillText(`car: ${car.name}`, car.xPos, car.yPos)
       })
     })
   },
