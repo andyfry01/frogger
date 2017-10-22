@@ -116,14 +116,35 @@ const Paint = {
     ctx.fillRect(G.Frog.xPos, G.Frog.yPos, G.Frog.w, G.Frog.h)
   },
   Score: function(ctx, score){
-    ctx.font = '24px Cambria';
+    ctx.font = '12px Cambria';
     ctx.fillText(`Score: ${score}`, 10, 25)
   }
 
 }
+
 const Generate = {
 
   Rows: function() {
+
+    function getXPositions(numItems){
+      let currentXPos = undefined
+      let xPositions = []
+      let startingXPositions = [10, 115, 300, 450]
+      for (let i = 0; i < numItems; i++) {
+        xPositions.push(0)
+      }
+      return xPositions.map((item, iteration) => {
+        if (iteration === 0) {
+          let randomStartingPoint = Math.floor(Math.random() * startingXPositions.length)
+          currentXPos = startingXPositions[randomStartingPoint]
+          return currentXPos
+        }
+        if (iteration > 0) {
+          currentXPos = currentXPos += Random.itemSpacing(G.minItemSpacing, G.maxItemSpacing, G.gridHeight)
+          return currentXPos
+        }
+      })
+    }
 
     let gridRowY = 0
     for (let i = 0; i < G.numGridRows; i++) {
@@ -131,7 +152,7 @@ const Generate = {
       let direction = Random.direction()
       let speed = Random.speed(G.maxRowSpeed, G.minRowSpeed)
       let numItems = Random.itemCount(G.maxItems, G.minItems)
-      let startingxPos = Random.startingXPos(G.canvasWidth)
+      let xPositions = getXPositions(numItems)
 
       let row = new Row(0, gridRowY, G.canvasWidth, G.gridHeight, direction, 4)
 
@@ -141,20 +162,18 @@ const Generate = {
           let maxWidthInUnits = G.maxItemWidth * G.gridHeight
           let minWidthInUnits = G.minItemWidth * G.gridHeight
           let itemWidth = Random.itemWidth(maxWidthInUnits, minWidthInUnits)
-          let itemSpacing = Random.itemSpacing(G.maxItemWidth)
-          let carName = `car ${j} in row ${gridRowY}`
-          let item = this.Item('car', {xPos: startingxPos, yPos: row.yPos, w: itemWidth, h: row.h}, row.direction, row.speed, carName)
+
+          let item = this.Item('car', {xPos: xPositions[j], yPos: row.yPos, w: itemWidth, h: row.h}, row.direction, row.speed)
           row.items.push(item)
-          startingxPos += (itemWidth + itemSpacing)
         }
       }
       G.rowArray.push(row)
       gridRowY += G.rowArray[i].h
     }
   },
-  Item: function(itemType, dimensions, direction, speed, name) {
+  Item: function(itemType, dimensions, direction, speed) {
     if (itemType = 'car') {
-      return new Car(dimensions.xPos, dimensions.yPos, dimensions.w, dimensions.h, direction, speed, name, 'car')
+      return new Car(dimensions.xPos, dimensions.yPos, dimensions.w, dimensions.h, direction, speed)
     }
   },
   Frog: function() {
