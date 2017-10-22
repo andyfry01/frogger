@@ -18,5 +18,6 @@ module.exports = {
   Frog: undefined,
 
   playerScore: 0,
+  playerLives: 3
 
 }

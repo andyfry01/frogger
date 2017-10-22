@@ -46,7 +46,7 @@ function draw() {
   Paint.Rows(ctx)
   Paint.Cars(ctx)
   Paint.Frog(ctx)
-  Paint.Score(ctx, G.playerScore)
+  Paint.GameInfo(ctx, G.playerScore, G.playerLives)
 }
 
 function loop(timestamp) {
@@ -61,12 +61,22 @@ function endGame(gameStatus){
   if (gameStatus === 'win') {
     incrementScore()
   }
+  if (gameStatus === 'lose') {
+    decrementLives()
+  }
+  if (gameStatus === 'game over') {
+    console.log('stub for game over condition');
+  }
   restartGame()
 }
 
 function incrementScore() {
   console.log('incrementScore fired');
   G.playerScore += 1
+}
+
+function decrementLives(){
+  G.playerLives -= 1
 }
 
 function restartGame(){
@@ -85,6 +95,9 @@ function checkGameStatus(frog){
   if (frog.yPos === 0) {
     console.log('frog wins?');
     endGame('win')
+  }
+  if (G.playerLives <= 0) {
+    endGame('game over')
   }
 }
 
@@ -115,9 +128,10 @@ const Paint = {
     ctx.fillStyle = 'rgba(0, 255, 255, 0.8)'
     ctx.fillRect(G.Frog.xPos, G.Frog.yPos, G.Frog.w, G.Frog.h)
   },
-  Score: function(ctx, score){
-    ctx.font = '12px Cambria';
+  GameInfo: function(ctx, score, lives) {
+    ctx.font = '18px Cambria';
     ctx.fillText(`Score: ${score}`, 10, 25)
+    ctx.fillText(`Lives: ${lives}`, 100, 25)
   }
 
 }
