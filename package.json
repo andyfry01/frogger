@@ -7,11 +7,15 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack-dev-server --watch"
   },
-  "author": "",
+  "author": "Andy Fry",
   "license": "ISC",
   "dependencies": {
-    "p5": "^0.5.11",
-    "webpack": "^3.0.0",
-    "webpack-dev-server": "^2.5.0"
+    "webpack": "^4.24.0",
+    "webpack-dev-server": "^3.1.10"
+  },
+  "devDependencies": {
+    "eslint": "^5.8.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0"
   }
 }

@@ -6,13 +6,13 @@ export default {
   DOWN: 40,
   LEFT: 37,
 
-  isDown: function(keyCode) {
+  isDown(keyCode) {
     return this._pressed[keyCode]
   },
-  onKeyDown: function(e) {
+  onKeyDown(e) {
     this._pressed[e.keyCode] = true
   },
-  onKeyUp: function(e) {
+  onKeyUp(e) {
     delete this._pressed[e.keyCode]
-  }
-}
+  },
+};

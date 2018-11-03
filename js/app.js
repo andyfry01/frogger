@@ -1,222 +1,224 @@
-import { Row } from './Row'
-import { Car } from './Car'
-import { Log } from './Log'
-import { Frog } from './Frog'
-import G from './Globals'
-import Keys from './Keys'
-import Random from './Random'
+import hey from 'ho';
+import { Row } from './Row';
+import { Car } from './Car';
+import { Log } from './Log';
+import { Frog } from './Frog';
+import G from './Globals';
+import Keys from './Keys';
+import Random from './Random';
 
 // set global timing variables
-let lastRender = 0
-let throttleInterval = 0
+let lastRender = 0;
+let throttleInterval = 0;
 
 function update(progress) {
-  throttleInterval += progress
-  for (let row in G.rowArray) {
-    G.rowArray[row].items = G.rowArray[row].items.map(item => {
-      item.update()
+  throttleInterval += progress;
+  for (const row in G.rowArray) {
+    G.rowArray[row].items = G.rowArray[row].items.map((item) => {
+      item.update();
       if (item.hitsFrog(G.Frog)) {
         if (item.type === 'car') {
-          endGame('lose')
+          endGame('lose');
         } else if (item.type === 'log') {
-          G.Frog.update(item.direction, item.speed)
+          G.Frog.update(item.direction, item.speed);
         }
       }
-      return item
-    })
+      return item;
+    });
   }
   // throttles key presses so frog doesn't go flying across screen
   if (throttleInterval > 70) {
-    if (Keys.isDown(Keys.UP)) { G.Frog.update('UP') }
-    if (Keys.isDown(Keys.RIGHT)) { G.Frog.update('RIGHT') }
-    if (Keys.isDown(Keys.DOWN)) { G.Frog.update('DOWN') }
-    if (Keys.isDown(Keys.LEFT)) { G.Frog.update('LEFT') }
-    throttleInterval = 0
+    if (Keys.isDown(Keys.UP)) { G.Frog.update('UP'); }
+    if (Keys.isDown(Keys.RIGHT)) { G.Frog.update('RIGHT'); }
+    if (Keys.isDown(Keys.DOWN)) { G.Frog.update('DOWN'); }
+    if (Keys.isDown(Keys.LEFT)) { G.Frog.update('LEFT'); }
+    throttleInterval = 0;
   }
-  checkGameStatus(G.Frog)
+  checkGameStatus(G.Frog);
 }
 
 function draw() {
   // Get canvas context
-  const canvas = document.getElementsByClassName('canvas')[0]
-  let ctx = canvas.getContext('2d')
+  const canvas = document.getElementsByClassName('canvas')[0];
+  const ctx = canvas.getContext('2d');
 
   // Paint page elements
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-  Paint.Rows(ctx)
-  Paint.Cars(ctx)
-  Paint.Frog(ctx)
-  Paint.GameInfo(ctx, G.playerScore, G.playerLives)
+  Paint.Rows(ctx);
+  Paint.Cars(ctx);
+  Paint.Frog(ctx);
+  Paint.GameInfo(ctx, G.playerScore, G.playerLives);
 }
 
 function loop(timestamp) {
-  const progress = timestamp - lastRender
-  update(progress)
-  draw()
-  lastRender = timestamp
-  window.requestAnimationFrame(loop)
+  const progress = timestamp - lastRender;
+  update(progress);
+  draw();
+  lastRender = timestamp;
+  window.requestAnimationFrame(loop);
 }
 
-function endGame(gameStatus){
+function endGame(gameStatus) {
   if (gameStatus === 'win') {
-    incrementScore()
+    incrementScore();
   }
   if (gameStatus === 'lose') {
-    decrementLives()
+    decrementLives();
   }
   if (gameStatus === 'game over') {
     console.log('stub for game over condition');
   }
-  restartGame()
+  restartGame();
 }
 
 function incrementScore() {
   console.log('incrementScore fired');
-  G.playerScore += 1
+  G.playerScore += 1;
 }
 
-function decrementLives(){
-  G.playerLives -= 1
+function decrementLives() {
+  G.playerLives -= 1;
 }
 
-function restartGame(){
+function restartGame() {
   // kill the old frog
-  G.Frog = undefined
+  G.Frog = undefined;
   // put a new one in the starting position
-  Generate.Frog()
+  Generate.Frog();
 }
 
-function checkGameStatus(frog){
+function checkGameStatus(frog) {
   // check if frog is off screen
   if (frog.xPos > G.canvasWidth || frog.xPos < 0 - frog.w || frog.yPos > G.canvasHeight - frog.h) {
-    endGame('lose')
+    endGame('lose');
   }
   // check if frog has made it to the end of the level
   if (frog.yPos === 0) {
     console.log('frog wins?');
-    endGame('win')
+    endGame('win');
   }
   if (G.playerLives <= 0) {
-    endGame('game over')
+    endGame('game over');
   }
 }
 
 // Methods for painting elements to the canvas
 const Paint = {
-  Rows: function(ctx) {
-    G.rowArray.forEach(row => {
-      ctx.fillStyle = 'rgba(50, 180, 50, 0.8)'
-      ctx.fillRect(row.xPos, row.yPos, row.w, row.h)
-    })
+  Rows(ctx) {
+    G.rowArray.forEach((row) => {
+      ctx.fillStyle = 'rgba(50, 180, 50, 0.8)';
+      ctx.fillRect(row.xPos, row.yPos, row.w, row.h);
+    });
   },
-  Cars: function(ctx) {
-    G.rowArray.forEach(row => {
-      row.items.forEach(car => {
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.8)'
+  Cars(ctx) {
+    G.rowArray.forEach((row) => {
+      row.items.forEach((car) => {
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
         if (car.xPos > ctx.canvas.width + (G.maxItemWidth * G.gridHeight)) {
-          car.xPos = 0 - (G.maxItemWidth * G.gridHeight)
+          car.xPos = 0 - (G.maxItemWidth * G.gridHeight);
         }
         if (car.xPos < 0 - (G.maxItemWidth * G.gridHeight)) {
-          car.xPos = ctx.canvas.width + (G.maxItemWidth * G.gridHeight)
+          car.xPos = ctx.canvas.width + (G.maxItemWidth * G.gridHeight);
         }
-        ctx.fillRect(car.xPos, car.yPos, car.w, car.h)
-        ctx.fillText(`car: ${car.name}`, car.xPos, car.yPos)
-      })
-    })
+        ctx.fillRect(car.xPos, car.yPos, car.w, car.h);
+        ctx.fillText(`car: ${car.name}`, car.xPos, car.yPos);
+      });
+    });
   },
-  Frog: function(ctx) {
-    ctx.fillStyle = 'rgba(0, 255, 255, 0.8)'
-    ctx.fillRect(G.Frog.xPos, G.Frog.yPos, G.Frog.w, G.Frog.h)
+  Frog(ctx) {
+    ctx.fillStyle = 'rgba(0, 255, 255, 0.8)';
+    ctx.fillRect(G.Frog.xPos, G.Frog.yPos, G.Frog.w, G.Frog.h);
   },
-  GameInfo: function(ctx, score, lives) {
+  GameInfo(ctx, score, lives) {
     ctx.font = '18px Cambria';
-    ctx.fillText(`Score: ${score}`, 10, 25)
-    ctx.fillText(`Lives: ${lives}`, 100, 25)
-  }
+    ctx.fillText(`Score: ${score}`, 10, 25);
+    ctx.fillText(`Lives: ${lives}`, 100, 25);
+  },
 
-}
+};
 
 const Generate = {
 
-  Rows: function() {
-
-    function getXPositions(numItems){
-      let currentXPos = undefined
-      let xPositions = []
-      let startingXPositions = [10, 115, 300, 450]
+  Rows() {
+    function getXPositions(numItems) {
+      let currentXPos;
+      const xPositions = [];
+      const startingXPositions = [10, 115, 300, 450];
       for (let i = 0; i < numItems; i++) {
-        xPositions.push(0)
+        xPositions.push(0);
       }
       return xPositions.map((item, iteration) => {
         if (iteration === 0) {
-          let randomStartingPoint = Math.floor(Math.random() * startingXPositions.length)
-          currentXPos = startingXPositions[randomStartingPoint]
-          return currentXPos
+          const randomStartingPoint = Math.floor(Math.random() * startingXPositions.length);
+          currentXPos = startingXPositions[randomStartingPoint];
+          return currentXPos;
         }
         if (iteration > 0) {
-          currentXPos = currentXPos += Random.itemSpacing(G.minItemSpacing, G.maxItemSpacing, G.gridHeight)
-          return currentXPos
+          currentXPos = currentXPos += Random.itemSpacing(G.minItemSpacing, G.maxItemSpacing, G.gridHeight);
+          return currentXPos;
         }
-      })
+      });
     }
 
-    let gridRowY = 0
+    let gridRowY = 0;
     for (let i = 0; i < G.numGridRows; i++) {
-      gridRowY = Math.floor(gridRowY)
-      let direction = Random.direction()
-      let speed = Random.speed(G.maxRowSpeed, G.minRowSpeed)
-      let numItems = Random.itemCount(G.maxItems, G.minItems)
-      let xPositions = getXPositions(numItems)
+      gridRowY = Math.floor(gridRowY);
+      const direction = Random.direction();
+      const speed = Random.speed(G.maxRowSpeed, G.minRowSpeed);
+      const numItems = Random.itemCount(G.maxItems, G.minItems);
+      const xPositions = getXPositions(numItems);
 
-      let row = new Row(0, gridRowY, G.canvasWidth, G.gridHeight, direction, 4)
+      const row = new Row(0, gridRowY, G.canvasWidth, G.gridHeight, direction, 4);
 
-        // no cars or logs on top, middle or bottom row
-        if (i !== 0 && i !== 5 && i !== 9) {
-          for (let j = 0; j < numItems; j++) {
-          let maxWidthInUnits = G.maxItemWidth * G.gridHeight
-          let minWidthInUnits = G.minItemWidth * G.gridHeight
-          let itemWidth = Random.itemWidth(maxWidthInUnits, minWidthInUnits)
+      // no cars or logs on top, middle or bottom row
+      if (i !== 0 && i !== 5 && i !== 9) {
+        for (let j = 0; j < numItems; j++) {
+          const maxWidthInUnits = G.maxItemWidth * G.gridHeight;
+          const minWidthInUnits = G.minItemWidth * G.gridHeight;
+          const itemWidth = Random.itemWidth(maxWidthInUnits, minWidthInUnits);
 
-          let item = this.Item('car', {xPos: xPositions[j], yPos: row.yPos, w: itemWidth, h: row.h}, row.direction, row.speed)
-          row.items.push(item)
+          const item = this.Item('car', {
+            xPos: xPositions[j], yPos: row.yPos, w: itemWidth, h: row.h,
+          }, row.direction, row.speed);
+          row.items.push(item);
         }
       }
-      G.rowArray.push(row)
-      gridRowY += G.rowArray[i].h
+      G.rowArray.push(row);
+      gridRowY += G.rowArray[i].h;
     }
   },
-  Item: function(itemType, dimensions, direction, speed) {
+  Item(itemType, dimensions, direction, speed) {
     if (itemType = 'car') {
-      return new Car(dimensions.xPos, dimensions.yPos, dimensions.w, dimensions.h, direction, speed)
+      return new Car(dimensions.xPos, dimensions.yPos, dimensions.w, dimensions.h, direction, speed);
     }
   },
-  Frog: function() {
-    let player = new Frog(G.canvasWidth / 2, G.canvasHeight - G.gridHeight, G.gridHeight, G.gridHeight)
-    G.Frog = player
-  }
-}
+  Frog() {
+    const player = new Frog(G.canvasWidth / 2, G.canvasHeight - G.gridHeight, G.gridHeight, G.gridHeight);
+    G.Frog = player;
+  },
+};
 
-window.onload = function(){
+window.onload = function () {
   // Get canvas and window dimensions
-  const canvas = document.getElementsByClassName('canvas')[0]
+  const canvas = document.getElementsByClassName('canvas')[0];
   // Initial setup for global variables
   // canvas width and height being rounded down to nearest multiple of 10
-  G.canvasWidth = Math.floor((window.innerWidth - 16) / 10) * 10
-  G.canvasHeight = Math.floor((window.innerHeight - 16) / 10) * 10
-  G.rowArray = []
-  canvas.width = G.canvasWidth
-  canvas.height = G.canvasHeight
-  G.gridHeight = G.canvasHeight / G.numGridRows
+  G.canvasWidth = Math.floor((window.innerWidth - 16) / 10) * 10;
+  G.canvasHeight = Math.floor((window.innerHeight - 16) / 10) * 10;
+  G.rowArray = [];
+  canvas.width = G.canvasWidth;
+  canvas.height = G.canvasHeight;
+  G.gridHeight = G.canvasHeight / G.numGridRows;
 
   // key bindings
-  window.addEventListener('keyup', (e) => { Keys.onKeyUp(e), false})
-  window.addEventListener('keydown', (e) => { Keys.onKeyDown(e), false})
+  window.addEventListener('keyup', (e) => { Keys.onKeyUp(e), false; });
+  window.addEventListener('keydown', (e) => { Keys.onKeyDown(e), false; });
   // generate rows and frog
-  Generate.Rows()
-  Generate.Frog()
+  Generate.Rows();
+  Generate.Frog();
   // Run game loop
-  window.requestAnimationFrame(loop)
-}
+  window.requestAnimationFrame(loop);
+};
 
 /*
   Notes:
