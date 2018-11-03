@@ -1,4 +1,3 @@
-import hey from 'ho';
 import { Row } from './Row';
 import { Car } from './Car';
 import { Log } from './Log';
