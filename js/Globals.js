@@ -1,6 +1,4 @@
-// For any game properties that are global
-
-module.exports = {
+const Globals = {
   numGridRows: 10,
   canvasHeight: 0,
   canvasWidth: 0,
@@ -13,11 +11,10 @@ module.exports = {
   maxItemWidth: 3,
   minItemSpacing: 3,
   maxItemSpacing: 5,
-
-  rowArray: [],
-  Frog: undefined,
-
+  RowArray: [],
+  FrogState: undefined,
   playerScore: 0,
   playerLives: 3,
-
 };
+
+export default Globals;
